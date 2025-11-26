@@ -11,15 +11,10 @@
     /* 全站共用基底樣式（請勿在此使用 ID 選擇器）*/
     :root {
       --bg: #0b1220;
-      /* 深色背景主色 */
       --surface: #0f1724;
-      /* 區塊表面色 */
       --accent: #1f6f8b;
-      /* 主色（深藍/青色）*/
       --muted: #9aa6b2;
-      /* 淺灰文案 */
       --text: #e6eef3;
-      /* 主要文字色 */
       --glass: rgba(255, 255, 255, 0.03);
       --max-width: 1200px;
     }
@@ -44,7 +39,8 @@
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.6;
       font-size: 16px;
-      /* mobile-first base */
+      /* 防止因極端狀況出現滾動條（作為最後保險）*/
+      overflow-x: hidden;
     }
 
     .page {
@@ -58,7 +54,8 @@
       width: 100%;
       max-width: var(--max-width);
       margin: 0 auto;
-      padding: 1rem;
+      padding: 0.75rem 1rem;
+      /* 保持合理內距且不致溢出 */
     }
 
     img {
@@ -89,7 +86,6 @@
       margin: -1px;
     }
 
-    /* 小按鈕通用樣式 */
     .btn {
       display: inline-block;
       padding: .5rem .9rem;
@@ -112,7 +108,7 @@
       top: 0;
       z-index: 50;
       backdrop-filter: blur(6px);
-      background: linear-gradient(180deg, rgba(11, 18, 32, 0.8), rgba(11, 18, 32, 0.6));
+      background: linear-gradient(180deg, rgba(11, 18, 32, 0.9), rgba(11, 18, 32, 0.85));
       border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       box-shadow: 0 2px 8px rgba(2, 6, 23, 0.6);
     }
@@ -130,20 +126,26 @@
       letter-spacing: 0.2px;
       color: var(--text);
       padding: .6rem 0;
+      white-space: nowrap;
+      flex: 0 0 auto;
     }
 
     .nav-links {
       display: flex;
       gap: .6rem;
       align-items: center;
+      flex-wrap: wrap;
+      /* 允許換行，避免在窄螢幕溢出 */
+      justify-content: flex-end;
     }
 
     .nav-link {
-      padding: .5rem .6rem;
+      padding: .45rem .6rem;
       border-radius: 6px;
       color: var(--muted);
       font-weight: 600;
       font-size: .95rem;
+      white-space: nowrap;
     }
 
     .nav-link:hover {
@@ -156,7 +158,9 @@
       align-items: center;
       justify-content: space-between;
       padding-left: 0;
-      padding-right: 0
+      padding-right: 0;
+      gap: 1rem;
+      flex-wrap: wrap
     }
 
     .section {
@@ -172,15 +176,19 @@
 
     /* Hero */
     .section-hero {
-      padding: 2.8rem 1rem;
+      padding: 2.8rem 0;
       display: flex;
       align-items: flex-start;
       gap: 1rem;
+      flex-direction: column;
+      /* 手機預設直列，避免橫向溢出 */
     }
 
     .hero-left {
-      flex: 1 1 320px;
+      flex: 1 1 auto;
       min-width: 0;
+      /* 重要：允許縮小避免 overflow */
+      order: 0;
     }
 
     .hero-title {
@@ -203,12 +211,12 @@
     }
 
     .hero-figure {
-      flex: 0 0 200px;
-      display: block;
+      width: 100%;
+      max-width: 420px;
+      margin-top: 1rem;
       align-self: center;
-      margin-left: 0.6rem;
-      min-width: 140px;
-      max-width: 240px;
+      order: 1;
+      /* 手機時圖片放在文字下面 */
     }
 
     .hero-figure img {
@@ -299,6 +307,7 @@
       align-items: center;
       color: var(--muted);
       font-weight: 600;
+      flex-wrap: wrap;
     }
 
     .contact-item a {
@@ -307,47 +316,64 @@
 
     /* CSS:CONTACT-END */
 
+
     /* CSS:RWD-START */
-    @media (min-width: 768px) {
-      .nav-links {
-        gap: 16px;
+    /* 手機優先，至少包含一個 min-width:768px 的調整 */
+    @media (min-width: 480px) {
+      .hero-title {
+        font-size: 1.8rem
       }
 
-      .hero-wrap {
-        grid-template-columns: 1.1fr 0.9fr;
-      }
-
-      .section-about .about-wrap {
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-      }
-
-      .grid-2 {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .grid-3 {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .section-skills .skill-list {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .section-projects .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .section-projects .projects-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (min-width: 1440px) {
       .container {
-        padding-inline: 24px;
+        padding-left: 1rem;
+        padding-right: 1rem
+      }
+    }
+
+    @media (min-width: 768px) {
+      .section-hero {
+        padding: 3.2rem 0;
+        align-items: center;
+        flex-direction: row;
+        /* 大於平板寬度時改為橫向 */
+      }
+
+      .hero-left {
+        flex: 1 1 60%;
+        order: 0
+      }
+
+      .hero-figure {
+        flex: 0 0 340px;
+        order: 1;
+        margin-top: 0;
+        margin-left: 1.2rem;
+        width: auto
+      }
+
+      .section-about .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        align-items: start;
+      }
+
+      .section-projects .projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        padding-left: 2rem;
+        padding-right: 2rem
+      }
+
+      .hero-title {
+        font-size: 2.2rem
+      }
+
+      .section-projects .projects-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
@@ -359,17 +385,21 @@
   <div class="page">
     <header class="site-header">
       <div class="container nav" role="navigation" aria-label="主要導覽">
-        <div class="logo">Your Name · Frontend Dev</div>
-        <nav class="nav-links" aria-label="頁面區塊連結"> <a class="nav-link" href="#hero">首頁</a> <a class="nav-link"
-            href="#about">關於我</a> <a class="nav-link" href="#skills">技能</a> <a class="nav-link" href="#projects">作品集</a>
+        <div class="logo">affix · Frontend Dev</div>
+        <nav class="nav-links" aria-label="頁面區塊連結">
+          <a class="nav-link" href="#hero">首頁</a>
+          <a class="nav-link" href="#about">關於我</a>
+          <a class="nav-link" href="#skills">技能</a>
+          <a class="nav-link" href="#projects">作品集</a>
           <a class="nav-link" href="#contact">聯絡我</a>
         </nav>
       </div>
     </header>
+
     <main>
       <!-- SECTION:HERO-START -->
       <section id="hero" class="section section-hero" aria-labelledby="hero-heading">
-        <div class="container" style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
+        <div class="container" style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:nowrap;">
           <div class="hero-left">
             <h1 id="hero-heading" class="hero-title">個人品牌網站 — Frontend Developer 的作品與履歷骨架</h1>
             <p class="hero-sub">這是網站的主視覺區，將展示一句話自我介紹、核心職稱與行動呼籲（例如瀏覽作品集或下載履歷）。</p>
